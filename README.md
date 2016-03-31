@@ -13,3 +13,6 @@ Clean data using Python script(s).
 - Command Line: [Git Bash](https://git-for-windows.github.io/)
 - Integrated Development Environment: [Atom](https://atom.io/)
 - Version Control: [Github](http://github.com/)
+
+## Notes
+- xls files have limit of 2^16 rows, while xlsx files have limit of 2^20 rows.
