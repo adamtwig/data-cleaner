@@ -1,6 +1,6 @@
 import os
 import xlrd
-import xlwt
+import xlsxwriter
 import argparse
 
 # http://www.tutorialspoint.com/python/os_walk.htm
@@ -36,14 +36,15 @@ def clean_rows(rows):
 def get_header(rows):
     return rows[2:3]
 
+# http://xlsxwriter.readthedocs.org/example_demo.html
 # http://stackoverflow.com/questions/23813237/xlrd-xlwt-in-python-how-to-copy-an-entire-row
 def write_xls(xls_file, sheet_name, data_rows):
-    book = xlwt.Workbook()
-    sheet = book.add_sheet(sheet_name)
+    workbook = xlsxwriter.Workbook(xls_file)
+    worksheet = workbook.add_worksheet(sheet_name)
     for row_idx, row in enumerate(data_rows):
         for col_idx, col in enumerate(row):
-            sheet.write(row_idx, col_idx, col)
-    book.save(xls_file)
+            worksheet.write(row_idx, col_idx, col)
+    workbook.close()
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Merge Excel data.')
@@ -56,29 +57,27 @@ def main():
     #root_dir = args.directory
     root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files\COMPLETE PUBLIC Building Files"
     #workbook_name = args.filename
-    workbook_name = "Merged.xls"
+    workbook_name = "PUBLIC.xlsx"
     sheet_name = 'Merged Data'
 
+    # recursively search for files from directory
     file_names = walk_files(root_dir)
-
-    # test
-    file_names = file_names[0:10]
-
+    file_names = file_names[0:3]
     target_rows = list()
 
     # get header of merged file
     header = get_header(read_sheet(read_xls(file_names[0], 0)))[0]
     target_rows.append(header)
 
+    # get rows of data
     for xls_file in file_names:
         sheet = read_xls(xls_file, 0)
         rows = read_sheet(sheet)
         cleaned_rows = clean_rows(rows)
-
-        # test
         cleaned_rows = cleaned_rows[0:2]
-
         target_rows = target_rows + cleaned_rows
+
+    # output the file
     write_xls(workbook_name, sheet_name, target_rows)
 
 if __name__ == "__main__":
