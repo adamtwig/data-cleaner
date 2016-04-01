@@ -14,5 +14,7 @@ Clean data using Python script(s).
 - Integrated Development Environment: [Atom](https://atom.io/)
 - Version Control: [Github](http://github.com/)
 
-## Notes
-- xls files have limit of 2^16 rows, while xlsx files have limit of 2^20 rows.
+## File Extension Limits
+- XLS: 2^16 rows
+- XLSX: 2^20 rows
+- CSV: None
