@@ -1,6 +1,7 @@
 import os
 import xlrd
 import xlsxwriter
+import csv
 import argparse
 
 # http://www.tutorialspoint.com/python/os_walk.htm
@@ -46,10 +47,17 @@ def write_xls(xls_file, sheet_name, data_rows):
             worksheet.write(row_idx, col_idx, col)
     workbook.close()
 
+# https://docs.python.org/dev/library/csv.html#csv.writer
+def write_csv(csv_file, data_rows):
+    with open(csv_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerows(data_rows)
+
 # merge excel files into one
 def merge_files(root_dir, workbook_name, sheet_name):
     # recursively search for files from directory
     file_names = walk_files(root_dir)
+    file_names = file_names[:5]
     target_rows = list()
     # get header of merged file
     header = get_header(read_sheet(read_xls(file_names[0], 0)))[0]
@@ -59,10 +67,12 @@ def merge_files(root_dir, workbook_name, sheet_name):
         sheet = read_xls(xls_file, 0)
         rows = read_sheet(sheet)
         cleaned_rows = clean_rows(rows)
+        cleaned_rows = cleaned_rows[:2]
         # concatenate lists
         target_rows = target_rows + cleaned_rows
     # output the file
-    write_xls(workbook_name, sheet_name, target_rows)
+    #write_xls(workbook_name, sheet_name, target_rows)
+    write_csv(workbook_name, target_rows)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Merge Excel data.')
@@ -76,7 +86,7 @@ def main():
     root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files"
     root_dir = root_dir + "\COMPLETE PUBLIC Building Files"
     #workbook_name = args.filename
-    workbook_name = "PUBLIC.xlsx"
+    workbook_name = "PUBLIC.csv"
     merge_files(root_dir, workbook_name, 'Merged Data')
 
 
