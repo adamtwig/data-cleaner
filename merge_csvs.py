@@ -46,6 +46,24 @@ def write_xls(xls_file, sheet_name, data_rows):
             worksheet.write(row_idx, col_idx, col)
     workbook.close()
 
+# merge excel files into one
+def merge_files(root_dir, workbook_name, sheet_name):
+    # recursively search for files from directory
+    file_names = walk_files(root_dir)
+    target_rows = list()
+    # get header of merged file
+    header = get_header(read_sheet(read_xls(file_names[0], 0)))[0]
+    target_rows.append(header)
+    # get rows of data
+    for xls_file in file_names:
+        sheet = read_xls(xls_file, 0)
+        rows = read_sheet(sheet)
+        cleaned_rows = clean_rows(rows)
+        # concatenate lists
+        target_rows = target_rows + cleaned_rows
+    # output the file
+    write_xls(workbook_name, sheet_name, target_rows)
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Merge Excel data.')
     parser.add_argument('directory', help='The root directory to recursively search for Excel files.')
@@ -55,30 +73,13 @@ def parse_arguments():
 def main():
     # args = parse_arguments()
     #root_dir = args.directory
-    root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files\COMPLETE PUBLIC Building Files"
+    root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files"
+    root_dir = root_dir + "\COMPLETE PUBLIC Building Files"
     #workbook_name = args.filename
     workbook_name = "PUBLIC.xlsx"
-    sheet_name = 'Merged Data'
+    merge_files(root_dir, workbook_name, 'Merged Data')
 
-    # recursively search for files from directory
-    file_names = walk_files(root_dir)
-    file_names = file_names[0:3]
-    target_rows = list()
 
-    # get header of merged file
-    header = get_header(read_sheet(read_xls(file_names[0], 0)))[0]
-    target_rows.append(header)
-
-    # get rows of data
-    for xls_file in file_names:
-        sheet = read_xls(xls_file, 0)
-        rows = read_sheet(sheet)
-        cleaned_rows = clean_rows(rows)
-        cleaned_rows = cleaned_rows[0:2]
-        target_rows = target_rows + cleaned_rows
-
-    # output the file
-    write_xls(workbook_name, sheet_name, target_rows)
 
 if __name__ == "__main__":
     main()
