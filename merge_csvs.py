@@ -1,6 +1,5 @@
 import os
 import xlrd
-import xlsxwriter
 import csv
 import argparse
 
@@ -37,16 +36,6 @@ def clean_rows(rows):
 def get_header(rows):
     return rows[2:3]
 
-# http://xlsxwriter.readthedocs.org/example_demo.html
-# http://stackoverflow.com/questions/23813237/xlrd-xlwt-in-python-how-to-copy-an-entire-row
-def write_xls(xls_file, sheet_name, data_rows):
-    workbook = xlsxwriter.Workbook(xls_file)
-    worksheet = workbook.add_worksheet(sheet_name)
-    for row_idx, row in enumerate(data_rows):
-        for col_idx, col in enumerate(row):
-            worksheet.write(row_idx, col_idx, col)
-    workbook.close()
-
 # https://docs.python.org/dev/library/csv.html#csv.writer
 def write_csv(csv_file, data_rows):
     with open(csv_file, 'w', newline='') as f:
@@ -54,10 +43,9 @@ def write_csv(csv_file, data_rows):
         writer.writerows(data_rows)
 
 # merge excel files into one
-def merge_files(root_dir, workbook_name, sheet_name):
+def merge_files(root_dir, workbook_name):
     # recursively search for files from directory
     file_names = walk_files(root_dir)
-    file_names = file_names[:5]
     target_rows = list()
     # get header of merged file
     header = get_header(read_sheet(read_xls(file_names[0], 0)))[0]
@@ -67,11 +55,9 @@ def merge_files(root_dir, workbook_name, sheet_name):
         sheet = read_xls(xls_file, 0)
         rows = read_sheet(sheet)
         cleaned_rows = clean_rows(rows)
-        cleaned_rows = cleaned_rows[:2]
         # concatenate lists
         target_rows = target_rows + cleaned_rows
     # output the file
-    #write_xls(workbook_name, sheet_name, target_rows)
     write_csv(workbook_name, target_rows)
 
 def parse_arguments():
@@ -82,12 +68,12 @@ def parse_arguments():
 
 def main():
     # args = parse_arguments()
-    #root_dir = args.directory
+    # root_dir = args.directory
     root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files"
     root_dir = root_dir + "\COMPLETE PUBLIC Building Files"
-    #workbook_name = args.filename
+    # workbook_name = args.filename
     workbook_name = "PUBLIC.csv"
-    merge_files(root_dir, workbook_name, 'Merged Data')
+    merge_files(root_dir, workbook_name)
 
 
 
