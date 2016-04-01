@@ -70,9 +70,9 @@ def main():
     # args = parse_arguments()
     # root_dir = args.directory
     root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files"
-    root_dir = root_dir + "\COMPLETE PUBLIC Building Files"
+    root_dir = root_dir + "\COMPLETE CHARTER Building Files"
     # workbook_name = args.filename
-    workbook_name = "PUBLIC.csv"
+    workbook_name = "CHARTER.csv"
     merge_files(root_dir, workbook_name)
 
 
