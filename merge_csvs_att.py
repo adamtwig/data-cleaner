@@ -72,8 +72,10 @@ def main():
     # root_dir = args.directory
     #root_dir = "S:\Projects\Open\KCFCCC - KConnect Data, Research, & Evaluation\Data Files"
     #root_dir = root_dir + "\COMPLETE CHARTER Building Files"
-    root_dir = "charter_districts/"
-    workbook_name = "CHARTER_DISTRICTS.csv"
+    #root_dir = "charter_districts/"
+    #workbook_name = "CHARTER_DISTRICTS.csv"
+    root_dir = "AttendancebyGrade/"
+    workbook_name = "FULL_AttendanceByGrade_AT.csv"
 
     # workbook_name = args.filename
     #workbook_name = "CHARTER.csv"
